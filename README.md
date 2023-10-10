@@ -24,4 +24,4 @@ Connect Feelix and select correct port of course
 On the Feelix motor: set switch to upload mode and press button once before each upload. After the upload the code will run by itself. 
 
 ## Run
-If the code is not running, set switch on Feelix motor to run mode, and press button once.
+If the code is not running (it starts automatically after each upload but not each power on), set switch on Feelix motor to run mode, and press button once.
