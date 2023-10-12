@@ -63,7 +63,8 @@ void setup() {
 bool dir = true;
 
 unsigned long oldmillis = 0;
-unsigned long wait = 1000;
+float wait = 800;
+int ctr = 0;
 void loop() {
   // main FOC algorithm function
   // the faster you run this function the better
@@ -79,7 +80,7 @@ void loop() {
   sensor.update();
 
   if (dir) {
-  motor.move(-6.0);
+  motor.move(-5.0);
   }
   else {
     motor.move(2.0);
@@ -89,6 +90,13 @@ void loop() {
     Serial.println(sensor.getAngle());
     dir = !dir;
     oldmillis = millis();
+    ctr++;
+//    wait = wait / 1.025;
   }
+
+//  if (ctr == 3) {
+//    delay(10);
+//    ctr = 0;
+//  }
 
 }
