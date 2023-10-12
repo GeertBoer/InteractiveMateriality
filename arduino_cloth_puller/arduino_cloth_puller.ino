@@ -1,7 +1,7 @@
 #include <SimpleFOC.h>
 
 // magnetic sensor instance - SPI
-MagneticSensorSPI sensor = MagneticSensorSPI(AS5147_SPI, PA4);
+MagneticSensorSPI sensor = MagneticSensorSPI(AS5147_SPI, PA5);
 // magnetic sensor instance - MagneticSensorI2C
 //MagneticSensorI2C sensor = MagneticSensorI2C(AS5600_I2C);
 // MagneticSensorAnalog sensor = MagneticSensorAnalog(A1, 14, 1020);
