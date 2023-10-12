@@ -63,7 +63,7 @@ void setup() {
 bool dir = true;
 
 unsigned long oldmillis = 0;
-unsigned long wait = 3000;
+unsigned long wait = 300;
 void loop() {
   // main FOC algorithm function
   // the faster you run this function the better
@@ -79,10 +79,10 @@ void loop() {
   sensor.update();
 
   if (dir) {
-  motor.move(18.0);
+  motor.move(0.0);
   }
   else {
-    motor.move(-10.0);
+    motor.move(8.0);
   }
 
   if ((millis() - oldmillis) > wait) {
