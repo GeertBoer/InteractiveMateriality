@@ -18,6 +18,7 @@ Tools:
 -> UART support: Disabled
 -> USB support: CDC (Generic serial supersede)
 -> USB speed: Low/Full speed
+-> STM32CubeProgrammer (DFU)
 
 Connect Feelix and select correct port of course
 
