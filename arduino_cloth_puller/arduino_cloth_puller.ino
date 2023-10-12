@@ -13,7 +13,7 @@ BLDCDriver3PWM driver = BLDCDriver3PWM(PC6, PC7, PC8, PB15);
 
 void setup() {
   // initialise magnetic sensor hardware
-  sensor.init();
+  sensor.init(); test
   // link the motor to the sensor
   motor.linkSensor(&sensor);
 
