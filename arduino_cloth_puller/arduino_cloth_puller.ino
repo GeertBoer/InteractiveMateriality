@@ -80,10 +80,10 @@ void loop() {
   sensor.update();
 
   if (dir) {
-  motor.move(-5.0);
+    motor.move(-6.0);
   }
   else {
-    motor.move(2.0);
+    motor.move(3.0);
   }
 
   if ((millis() - oldmillis) > wait) {
@@ -91,12 +91,13 @@ void loop() {
     dir = !dir;
     oldmillis = millis();
     ctr++;
-//    wait = wait / 1.025;
+    //    wait = wait / 1.025;
+    wait = random(50, 1000);
   }
 
-//  if (ctr == 3) {
-//    delay(10);
-//    ctr = 0;
-//  }
+  //  if (ctr == 3) {
+  //    delay(10);
+  //    ctr = 0;
+  //  }
 
 }
