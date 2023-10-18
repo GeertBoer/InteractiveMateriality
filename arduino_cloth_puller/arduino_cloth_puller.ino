@@ -65,6 +65,7 @@ bool dir = true;
 unsigned long oldmillis = 0;
 float wait = 800;
 int ctr = 0;
+
 void loop() {
   // main FOC algorithm function
   // the faster you run this function the better
@@ -77,7 +78,7 @@ void loop() {
   // this function can be run at much lower frequency than loopFOC() function
   // You can also use motor.move() and set the motor.target in the code
 
-  sensor.update();
+  // sensor.update();
 
   if (dir) {
     motor.move(-6.0);
@@ -95,9 +96,22 @@ void loop() {
     wait = random(50, 1000);
   }
 
-  //  if (ctr == 3) {
-  //    delay(10);
-  //    ctr = 0;
-  //  }
+  // //  if (ctr == 3) {
+  // //    delay(10);
+  // //    ctr = 0;
+  // //  }
+
+
+  // int dTime = 100;
+
+  // motor.move(-6.0);
+  // delay(10);
+  // motor.move(4.0);
+  // delay(10);
+  // motor.move(-4.0);
+  // delay(10);
+  // motor.move(-6.0);
+  // delay(10);
+
 
 }
