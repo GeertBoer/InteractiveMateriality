@@ -5,7 +5,7 @@ MagneticSensorSPI sensor = MagneticSensorSPI(AS5147_SPI, 10);
 
 // BLDC motor & driver instance
 BLDCMotor motor = BLDCMotor(7);
-BLDCDriver3PWM driver = BLDCDriver3PWM(1, 2, 4, 3);
+BLDCDriver3PWM driver = BLDCDriver3PWM(2, 4, 3, 1);
 
 void setup() {
   // initialise magnetic sensor hardware
