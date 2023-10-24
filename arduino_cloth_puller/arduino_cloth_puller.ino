@@ -1,11 +1,11 @@
 #include <SimpleFOC.h>
 
 // magnetic sensor instance - SPI
-MagneticSensorSPI sensor = MagneticSensorSPI(AS5147_SPI, PA4);
+MagneticSensorSPI sensor = MagneticSensorSPI(AS5147_SPI, 10);
 
 // BLDC motor & driver instance
 BLDCMotor motor = BLDCMotor(7);
-BLDCDriver3PWM driver = BLDCDriver3PWM(PC6, PC7, PC8, PB15);
+BLDCDriver3PWM driver = BLDCDriver3PWM(1, 2, 4, 3);
 
 void setup() {
   // initialise magnetic sensor hardware
