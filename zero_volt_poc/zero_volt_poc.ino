@@ -9,7 +9,7 @@
 #include <SimpleFOC.h>
 
 // magnetic sensor instance - SPI
-MagneticSensorSPI sensor = MagneticSensorSPI(AS5147_SPI, 10);
+MagneticSensorSPI sensor = MagneticSensorSPI(AS5147_SPI, 9);
 
 // BLDC motor & driver instance
 BLDCMotor motor = BLDCMotor(7);
@@ -19,10 +19,8 @@ BLDCDriver3PWM driver = BLDCDriver3PWM(2, 4, 3, 1);
 //StepperDriver4PWM driver = StepperDriver4PWM(9, 5, 10, 6,  8);
 
 // voltage set point variable
-float target_voltage = 0;
-// instantiate the commander
-Commander command = Commander(Serial);
-void doTarget(char* cmd) { command.scalar(&target_voltage, cmd); }
+float target_voltage = 12;
+
 
 void setup() {
 
@@ -36,52 +34,45 @@ void setup() {
   driver.init();
   motor.linkDriver(&driver);
 
-  // aligning voltage 
+  // aligning voltage
   motor.voltage_sensor_align = 5;
   // choose FOC modulation (optional)
   motor.foc_modulation = FOCModulationType::SpaceVectorPWM;
   // set motion control loop to be used
   motor.controller = MotionControlType::torque;
-
-  // use monitoring with serial 
+  // use monitoring with serial
   Serial.begin(115200);
   // comment out if not needed
-  motor.useMonitoring(Serial);
-
+  // motor.useMonitoring(Serial);
   // initialize motor
   motor.init();
-  // align sensor and start FOC
   motor.initFOC();
 
-  // add target command T
-  command.add('T', doTarget, "target voltage");
-
-  Serial.println(F("Motor ready."));
-  Serial.println(F("Set the target voltage using serial terminal:"));
-  _delay(1000);
+  pinMode(1, HIGH);
 }
 
 unsigned long oldMillis = 0;
-unsigned long waittime = 2000;
+unsigned long waittime = 600;
 bool modus = false;
 void loop() {
-
-  // main FOC algorithm function
-  // the faster you run this function the better
-  // Arduino UNO loop  ~1kHz
-  // Bluepill loop ~10kHz 
   motor.loopFOC();
 
   // Motion control function
   // velocity, position or voltage (defined in motor.controller)
   // this function can be run at much lower frequency than loopFOC() function
   // You can also use motor.move() and set the motor.target in the code
-  motor.move(target_voltage);
-  
+  if (modus) {
+    motor.move(target_voltage);
+  } else {
+    motor.move(-2);
+  }
+
+
   if (millis() > (oldMillis + waittime)) {
-    Serial.print("wajow");
-    pinMode(1, modus);
+
+    // pinMode(1, modus);
     modus = !modus;
+    Serial.print(modus);
     oldMillis = millis();
   }
 }
