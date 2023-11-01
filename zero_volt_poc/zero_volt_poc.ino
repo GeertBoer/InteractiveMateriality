@@ -23,7 +23,7 @@ float target_voltage = 12;
 
 
 void setup() {
-
+Serial.begin(115200);
   // initialise magnetic sensor hardware
   sensor.init();
   // link the motor to the sensor
@@ -43,16 +43,16 @@ void setup() {
   // use monitoring with serial
   Serial.begin(115200);
   // comment out if not needed
-  // motor.useMonitoring(Serial);
+  motor.useMonitoring(Serial);
   // initialize motor
   motor.init();
   motor.initFOC();
 
-  pinMode(1, HIGH);
+  // pinMode(1, HIGH);
 }
 
 unsigned long oldMillis = 0;
-unsigned long waittime = 600;
+unsigned long waittime = 2000;
 bool modus = false;
 void loop() {
   motor.loopFOC();
@@ -62,15 +62,15 @@ void loop() {
   // this function can be run at much lower frequency than loopFOC() function
   // You can also use motor.move() and set the motor.target in the code
   if (modus) {
-    motor.move(target_voltage);
+    motor.move(0);
   } else {
-    motor.move(-2);
+    motor.move(0);
   }
 
 
   if (millis() > (oldMillis + waittime)) {
 
-    // pinMode(1, modus);
+    pinMode(1, modus);
     modus = !modus;
     Serial.print(modus);
     oldMillis = millis();
