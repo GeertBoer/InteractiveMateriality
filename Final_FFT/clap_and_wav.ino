@@ -20,22 +20,20 @@ float target_voltage = 8;
 const int myInput = AUDIO_INPUT_MIC;
 const char* filename = "/TEUN8A.WAV";
 
-
 // GUItool: begin automatically generated code
-AudioPlaySdResmp playSdWav1;  //xy=325,347
-AudioInputI2S audioInput;     //xy=326,250
-AudioAmplifier amp1;          //xy=487,314
-AudioAmplifier amp2;          //xy=490,373
-AudioAnalyzePeak peak1;       //xy=536,255
-AudioOutputI2S audioOutput;   //xy=688,349
+AudioPlaySdResmp playSdWav1;  //xy=248,492
+AudioInputI2S audioInput;     //xy=249,395
+AudioAmplifier amp1;          //xy=410,459
+AudioAmplifier amp2;          //xy=413,518
+AudioAnalyzeFFT1024 myFFT;    //xy=430,383
+AudioOutputI2S audioOutput;   //xy=611,494
 AudioConnection patchCord1(playSdWav1, 0, amp1, 0);
 AudioConnection patchCord2(playSdWav1, 1, amp2, 0);
-AudioConnection patchCord3(audioInput, 0, peak1, 0);
+AudioConnection patchCord3(audioInput, 0, myFFT, 0);
 AudioConnection patchCord4(amp1, 0, audioOutput, 0);
 AudioConnection patchCord5(amp2, 0, audioOutput, 1);
-AudioControlSGTL5000 audioShield;  //xy=500,171
-// GUItool: end automatically generated code
-
+AudioControlSGTL5000 audioShield;  //xy=423,316
+// END AUDIO
 
 float audiogain = 1.0;
 float playbackrate = 0.5;
@@ -58,10 +56,8 @@ void setup() {
   audioShield.enable();
   audioShield.inputSelect(myInput);
   audioShield.volume(1.0);
-  audioShield.micGain(1);
-
   // Configure the window algorithm to use
-
+  myFFT.windowFunction(AudioWindowHanning1024);
   // amp1.gain(audiogain);
   // amp2.gain(audiogain);
   // playSdWav1.playWav(filename);
@@ -104,9 +100,6 @@ float dif = 0.0;
 
 float n;
 int i;
-
-float maxpeak = 0.0;
-float peak = 0.0;
 void loop() {
   AudioNoInterrupts();
   motor.loopFOC();
@@ -127,8 +120,11 @@ void loop() {
     AudioInterrupts();
     if (modus) {
       playSdWav1.playWav(filename);
-      maxpeak = 0.0;
     }
+
+    // if (!playSdWav1.isPlaying()) {
+    //   playSdWav1.playWav("/TEUN8A.WAV");
+    // }
 
     delay(1);
 
@@ -139,19 +135,33 @@ void loop() {
 
   AudioInterrupts();
 
-  if (peak1.available()) {
-    peak = peak1.read();
-    if (peak < 0.95) {
-      if (peak > maxpeak) {
-        maxpeak = peak;
-        Serial.println(maxpeak);
-      }
+  if (myFFT.available()) {
+    fftdata = myFFT.read(11);
 
-      if (peak >= 0.6) {
-        waittime = random(5, 150);
-      }
+    if (fftdata > 0.35) {
+      Serial.print("fft trigger: ");
+      Serial.println(fftdata);
+      waittime = 80;
     }
+
+    // // each time new FFT data is available
+    // // print it all to the Arduino Serial Monitor
+    // Serial.print("FFT: ");
+    // for (i = 0; i < 40; i++) {
+    //   n = myFFT.read(i);
+    //   if (i == 11) {
+    //     Serial.print("No. 11: ");
+    //   }
+    //   if (n >= 0.38) {
+    //     Serial.print(n);
+    //     Serial.print(" ");
+    //   } else {
+    //     Serial.print("  -  ");  // don't print "0.00"
+    //   }
+    // }
+    // Serial.println();
   }
+
 
   if (millis() > (olddifdelay + difdelay)) {
     olddifdelay = millis();
@@ -164,7 +174,10 @@ void loop() {
       playbackrate = map(dif, 0.0, 0.7, 0.3, 1.0);  // dit is de OG
     }
 
+
     playSdWav1.setPlaybackRate(playbackrate);
+    // Serial.print("Playback rate: ");
+    // Serial.println(playbackrate);
 
     oldAngle = sensor.getAngle();
   }
